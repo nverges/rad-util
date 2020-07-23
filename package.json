@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "lodash-es": "^4.17.15"
+    "chalk": "^4.1.0",
+    "lodash-es": "^4.17.15",
+    "open-in-editor": "^2.2.0"
   }
 }
