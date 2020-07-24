@@ -7,23 +7,15 @@ const editor = openInEditor.configure({
   cmd: "/usr/local/bin/code",
   pattern: "-r -g",
 });
-
-// Extract input variable
 const userInput = args[0];
 
-// Generate filename
-function generateColumnFilename(fileName) {
-  return `${process.cwd()}/${fileName}/${fileName}.jsx`;
-}
-
-// Utility function to convert snake_case to camelCase
+// Text transformation utils
 function snakeToCamel(str) {
   return str.replace(/([-_][a-z])/g, (group) =>
     group.toUpperCase().replace("-", "").replace("_", ""),
   );
 }
 
-// Utility function to convert camelCase to snake_case
 function camelToSnake(string) {
   return string
     .replace(/[\w]([A-Z])/g, function (m) {
@@ -32,6 +24,16 @@ function camelToSnake(string) {
     .toLowerCase();
 }
 
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
+// Generate filename
+function generateColumnFilename(fileName) {
+  return `${process.cwd()}/${fileName}/${fileName}.jsx`;
+}
+
+// Open file in VS Code
 function openFileInEditor(fileName) {
   editor.open(generateColumnFilename(fileName)).then(
     function () {
@@ -48,6 +50,39 @@ function makeDirs(fileName) {
   fs.mkdirSync(`./${fileName}`, { recursive: true });
 }
 
+function columnTemplate(fileName) {
+  return `import { MemoizedLabelColumn } from "spa/components/advanced_table_columns";
+import PropTypes from "prop-types";
+import React from "react";
+
+export const ${snakeToCamel(`${userInput}_column`)} = {
+  fused: false,
+  hidden: false,
+  key: "${snakeToCamel(userInput)}",
+  label: "${capitalizeFirstLetter(snakeToCamel(fileName))}",
+  width: 200,
+  enabled: true,
+  sort: true,
+  sortActive: false,
+  sortDirection: "asc",
+  filter: false,
+  filterActive: false,
+  filterType: "EMPTY",
+  filterValue: {},
+};
+
+export function ${capitalizeFirstLetter(
+    snakeToCamel(fileName),
+  )}({ ${snakeToCamel(fileName)} }) {
+  return <MemoizedLabelColumn text={${snakeToCamel(fileName)}} />;
+}
+
+${capitalizeFirstLetter(snakeToCamel(fileName))}.propTypes = {
+  ${snakeToCamel(fileName)}: PropTypes.string,
+};
+`;
+}
+
 // Create files
 function generate(fileName) {
   makeDirs(fileName);
@@ -56,28 +91,7 @@ function generate(fileName) {
     // Create boilerplate column
     fs.writeFileSync(
       generateColumnFilename(fileName),
-      `import { ModelDisplay } from "spa/components/model_display";
-import PropTypes from "prop-types";
-import React from "react";
-
-export const ${snakeToCamel(`${userInput}_column`)} = {
-  fused: true,
-  hidden: false,
-  key: "${snakeToCamel(userInput)}",
-  label: "Job",
-  width: 200,
-  enabled: true,
-  sort: true,
-  sortActive: true,
-  sortDirection: "asc",
-  filter: false,
-  filterActive: true,
-  filterType: "EMPTY",
-  filterMeta: [],
-  filterValue: {},
-  showToggles: true,
-};
-`,
+      columnTemplate(fileName),
     );
 
     // Create index.js file add import statement
