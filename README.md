@@ -25,3 +25,11 @@ https://github.com/nverges/rad-util
    - Opens new file in VS Code
 4. Add the hash and Component to your `renderManifest`
 5. And you're done!
+
+
+---
+### generateTests.js
+- Generates a test file for each folder in the `table_columns` directory
+- Add the following alias to your `.zshrc`:
+  - `alias generateTests='node ~/scripts/generateTests.js'`
+- Navigate to your `table_columns` folder and run `generateTests`
