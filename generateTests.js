@@ -1,7 +1,7 @@
-const { readdirSync } = require("fs");
 const fs = require("fs");
 const chalk = require("chalk");
-// const { exec } = require("child_process");
+let evens = [];
+let odds = [];
 
 // Text transformation utilities
 function capitalizeFirstLetter(string) {
@@ -28,25 +28,25 @@ function columnTemplate(fileName) {
   return `import { ${getComponentName(fileName)}, ${getColumnName(
     fileName,
   )} } from "./${snakeToCamel(fileName)}";
-
-import React from "react";
-import { createShallow } from "@material-ui/core/test-utils";
+  
+  import React from "react";
+  import { createShallow } from "@material-ui/core/test-utils";
 
 describe("<${getComponentName(fileName)} />", () => {
   let shallow;
-
+  
   beforeAll(() => {
     shallow = createShallow();
   });
-
+  
   describe("default { ${getColumnName(
     fileName,
   )} } export for the application.", () => {
-    it("Should match the snapshot.", () => {
-      expect(${getColumnName(fileName)}).toMatchSnapshot();
+      it("Should match the snapshot.", () => {
+        expect(${getColumnName(fileName)}).toMatchSnapshot();
+      });
     });
-  });
-
+    
   it("Should render the <${getComponentName(fileName)} /> column.", () => {
     const wrapper = shallow(<${getComponentName(fileName)} />);
     expect(wrapper).toMatchSnapshot();
@@ -57,34 +57,63 @@ describe("<${getComponentName(fileName)} />", () => {
 
 // Returns an array of all folders in current directory
 const getDirectories = (source) =>
-  readdirSync(source, { withFileTypes: true })
+  fs
+    .readdirSync(source, { withFileTypes: true })
     .filter((dirent) => dirent.isDirectory())
     .map((dirent) => dirent.name);
 
-const folders = getDirectories(process.cwd());
+// const folders = getDirectories(process.cwd());
+folders = ["jobs", "assignee"];
 
 // Map through folders and create test file
 try {
-  console.log(chalk.green("Success! Files created:"));
   folders.map((folder) => {
     fs.writeFileSync(`./${folder}/${folder}.test.jsx`, columnTemplate(folder)),
       console.log(chalk.blue(`./${folder}/${folder}.test.jsx`));
   });
+  console.log(chalk.green("Success! Tests created:"));
 } catch (err) {
   console.log(chalk.red("Please review your errors."));
   console.log(err);
 }
 
+// let evens = [];
+// let odds = [];
+folders.map((folder) =>
+  fs.readFile(`./${folder}/${folder}.jsx`, "utf8", function (err, data) {
+    if (err) {
+      return console.log(err);
+    }
+
+    const regex = data.match(/(\w+)(?=.*isRequired)/g);
+    const regexFiltered = regex.filter((r) => r != "PropTypes");
+
+    const splitArray = regexFiltered.filter((r) =>
+      regexFiltered.indexOf(r) % 2 == 0 ? evens.push(r) : odds.push(r),
+    );
+    console.log("splitArray ", splitArray);
+    console.log("keys ", evens);
+    console.log("types ", odds);
+    return [evens, odds];
+  }),
+);
+
 // folders.map((folder) =>
-//   exec(`npm test ${folder}`, (error, stdout, stderr) => {
-//     if (error) {
-//       console.log(`error: ${error.message}`);
-//       return;
+//   fs.readFile(`./${folder}/${folder}.jsx`, "utf8", function (err, data) {
+//     if (err) {
+//       return console.log(err);
 //     }
-//     if (stderr) {
-//       console.log(`stderr: ${stderr}`);
-//       return;
-//     }
-//     console.log(`stdout: ${stdout}`);
+
+//     const regex = data.match(/(\w+)(?=.*isRequired)/g);
+//     const regexFiltered = regex.filter((r) => r != "PropTypes");
+
+//     const splitArray = regexFiltered.map((r) =>
+//       regexFiltered.indexOf(r) % 2 == 0 ? evens.push(r) : odds.push(r),
+//     );
+//     // console.log("splitArray ", splitArray);
+//     console.log("keys ", evens);
+//     console.log("types ", odds);
+//     return [evens, odds];
 //   }),
 // );
+// console.log("evens ", evens);
