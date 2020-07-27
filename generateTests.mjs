@@ -1,24 +1,11 @@
-const fs = require("fs");
-const chalk = require("chalk");
+import {
+  camelToSnake,
+  capitalizeFirstLetter,
+  snakeToCamel,
+} from "./textModifiers.mjs";
 
-// Text transformation utilities
-function capitalizeFirstLetter(string) {
-  return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
-function snakeToCamel(str) {
-  return str.replace(/([-_][a-z])/g, (group) =>
-    group.toUpperCase().replace("-", "").replace("_", ""),
-  );
-}
-
-function camelToSnake(string) {
-  return string
-    .replace(/[\w]([A-Z])/g, function (m) {
-      return m[0] + "_" + m[1];
-    })
-    .toLowerCase();
-}
+import chalk from "chalk";
+import fs from "fs";
 
 // Generate Component name
 function getComponentName(fileName) {
@@ -60,7 +47,7 @@ function propTypeMapper(type) {
 }
 
 // Build string to append to Component
-function buildPropTypesString([key, type]) {
+function buildPropTypesString([{ key, type }]) {
   return `${key}=${propTypeMapper(type)} `;
 }
 
@@ -82,14 +69,19 @@ function getPropTypes(fileName) {
       : "-";
 
     // Need splitArray to be an array of objects [{ key, type }]
+    // console.log("before ", splitArray);
     splitArray.push(modifiedSplitArray);
-    console.log(chalk.yellow("modifiedSplitArray ", modifiedSplitArray));
-    return splitArray;
+    // console.log(chalk.yellow("after modifiedSplitArray ", modifiedSplitArray));
+    // console.log(chalk.yellow("after splitArray ", modifiedSplitArray));
+    // return splitArray;
   });
   // Need splitArray TO BE IN SCOPE RIGHT HERE SOMEHOW... AND THIS WILL WORK!
   // console.log(chalk.red("PropTypes not added."));
   return "";
-  // return buildPropTypesString(["SWEET", "func"]);
+  // return buildPropTypesString([
+  //   { key: "SWEET", type: "func" },
+  //   { key: "foo", type: "bar" },
+  // ]);
   // console.log(
   //   chalk.green(`Success! PropTypes automatically added to ${fileName}:`),
   // );
@@ -97,6 +89,7 @@ function getPropTypes(fileName) {
   // return buildPropTypesString([{ testProp: "string" }]);
 }
 
+// Test file
 function columnTemplate(fileName) {
   return `import { ${getComponentName(fileName)}, ${getColumnName(
     fileName,
@@ -121,21 +114,22 @@ describe("<${getComponentName(fileName)} />", () => {
   });
 
   it("Should render the <${getComponentName(fileName)} /> column.", () => {
-    const wrapper = shallow(<${getComponentName(fileName)} ${getPropTypes(
-    fileName,
-  )}/>);
+    const wrapper = shallow(<${getComponentName(fileName)} />);
     expect(wrapper).toMatchSnapshot();
   });
 });
 `;
 }
 
+// ${getPropTypes(
+//     fileName,
+//   )}
 // Returns an array of all folders in current directory
 const getDirectories = (source) =>
   fs
     .readdirSync(source, { withFileTypes: true })
-    .filter((dirent) => dirent.isDirectory())
-    .map((dirent) => dirent.name);
+    .filter((dir) => dir.isDirectory())
+    .map((dir) => dir.name);
 
 const folders = getDirectories(process.cwd());
 
@@ -151,5 +145,5 @@ try {
 } catch (err) {
   console.log(chalk.red("Please review your errors."));
   console.log(err);
-  return err;
+  // return err;
 }
