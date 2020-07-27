@@ -19,35 +19,14 @@ const userInput = args[0];
 
 // Column content
 export function columnTemplate(fileName) {
-  return `import { MemoizedLabelColumn } from "spa/components/advanced_table_columns";
-import PropTypes from "prop-types";
+  return `import PropTypes from "prop-types";
 import React from "react";
 
-export const ${snakeToCamel(`${userInput}_column`)} = {
-  fused: false,
-  hidden: false,
-  key: "${snakeToCamel(userInput)}",
-  label: "${capitalizeFirstLetter(snakeToCamel(fileName))}",
-  width: 200,
-  enabled: true,
-  sort: true,
-  sortActive: false,
-  sortDirection: "asc",
-  filter: false,
-  filterActive: false,
-  filterType: "EMPTY",
-  filterValue: {},
-};
-
-export function ${capitalizeFirstLetter(
-    snakeToCamel(fileName),
-  )}({ ${snakeToCamel(fileName)} }) {
-  return <MemoizedLabelColumn text={${snakeToCamel(fileName)}} />;
+export function ${snakeToCamel(capitalizeFirstLetter(fileName))}() {
+  return "${snakeToCamel(fileName)}";
 }
 
-${capitalizeFirstLetter(snakeToCamel(fileName))}.propTypes = {
-  ${snakeToCamel(fileName)}: PropTypes.string,
-};
+${snakeToCamel(capitalizeFirstLetter(fileName))}.propTypes = {};
 `;
 }
 
@@ -82,7 +61,7 @@ export function generate(fileName) {
     );
 
     // Open file in VS Code
-    // openFileInEditor(fileName);
+    openFileInEditor(fileName);
   } catch (err) {
     console.log(chalk.red("Please review your errors."));
     console.log(err);
