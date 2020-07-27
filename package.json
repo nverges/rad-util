@@ -2,7 +2,8 @@
   "name": "scripts",
   "version": "1.0.0",
   "description": "",
-  "main": "createColumn.js",
+  "main": "server.js",
+  "publishConfig": { "registry": "https://npm.pkg.github.com/" },
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -15,6 +16,5 @@
     "chalk": "^4.1.0",
     "express": "^4.17.1",
     "open-in-editor": "^2.2.0"
-  },
-  "devDependencies": {}
+  }
 }
