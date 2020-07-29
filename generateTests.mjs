@@ -5,6 +5,7 @@ import {
 } from "./textModifiers.mjs";
 
 import chalk from "chalk";
+import { folders } from "./utils.mjs";
 import fs from "fs";
 
 // Generate Component name
@@ -66,13 +67,13 @@ function getPropTypes(fileName) {
       ? regexFiltered.map((r) =>
           regexFiltered.indexOf(r) % 2 == 0 ? addKey(r) : addType(r),
         )
-      : "-";
+      : "";
 
     // Need splitArray to be an array of objects [{ key, type }]
     // console.log("before ", splitArray);
     splitArray.push(modifiedSplitArray);
-    // console.log(chalk.yellow("after modifiedSplitArray ", modifiedSplitArray));
-    // console.log(chalk.yellow("after splitArray ", modifiedSplitArray));
+    console.log(chalk.yellow("after modifiedSplitArray ", modifiedSplitArray));
+    console.log(chalk.yellow("after splitArray ", modifiedSplitArray));
     // return splitArray;
   });
   // Need splitArray TO BE IN SCOPE RIGHT HERE SOMEHOW... AND THIS WILL WORK!
@@ -113,25 +114,18 @@ describe("<${getComponentName(fileName)} />", () => {
     });
   });
 
-  it("Should render the <${getComponentName(fileName)} /> column.", () => {
+  it("Should render the <${getComponentName(fileName)} ${getPropTypes(
+    fileName,
+  )}/> column.", () => {
     const wrapper = shallow(<${getComponentName(fileName)} />);
     expect(wrapper).toMatchSnapshot();
   });
 });
 `;
 }
-
 // ${getPropTypes(
 //     fileName,
 //   )}
-// Returns an array of all folders in current directory
-const getDirectories = (source) =>
-  fs
-    .readdirSync(source, { withFileTypes: true })
-    .filter((dir) => dir.isDirectory())
-    .map((dir) => dir.name);
-
-const folders = getDirectories(process.cwd());
 
 // Map through folders and create test file
 try {

@@ -5,6 +5,7 @@
   - createComponent
   - createComponents
   - generateTests
+  - generateRowManifest.mjs
 ---
 *Notes*
 *- Uses .mjs files because `type: "module"` is set in `package.json` so that we can use use ES6 exports/imports*
@@ -19,6 +20,7 @@
   - `alias createComponent='node --experimental-modules ~/scripts/createComponent.mjs'`
   - `alias createComponents='node --experimental-modules ~/scripts/createComponents.mjs'`
   - `alias generateTests='node --experimental-modules ~/scripts/generateTests.mjs'`
+  - `alias generateRowManifest='node-exp ~/rad-util/generateRowManifest.mjs'`
 - Now, you can execute any of the above script from any index directory to easily add a single new column, multiple new columns, and generate test files!
   - e.g. index directory: `spa/components/tasks/table_columns`
 ---
@@ -41,6 +43,10 @@
 ### generateTests.mjs
 - Generates a test file for each folder in your current directory
 - Usage: `generateTests`
+
+### generateRowManifest.mjs
+- Generates a row_manifest.js file based on the folders in the current directory
+- Usage: Navigate to `{table}/table_columns` and run `generateRowManifest`
 
 ### createComponent.mjs
 - Creates a default React component

@@ -18,7 +18,7 @@ export function generateColumnFilename(fileName) {
   return `${process.cwd()}/${fileName}/${fileName}.jsx`;
 }
 
-const folders = getDirectories(process.cwd());
+export const folders = getDirectories(process.cwd());
 
 // Open file in VS Code
 export function openFileInEditor(fileName) {

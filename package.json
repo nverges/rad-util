@@ -8,7 +8,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --experimental-modules server",
-    "babel-node": "babel-node --presets=/*a*/"
+    "babel-node": "babel-node --presets=/*a*/",
+    "generateRowManifest": "node --experimental-modules generateRowManifest.mjs"
   },
   "author": "",
   "license": "ISC",

@@ -23,10 +23,10 @@ export function columnTemplate(fileName) {
 import PropTypes from "prop-types";
 import React from "react";
 
-export const ${snakeToCamel(`${userInput}_column`)} = {
+export const ${snakeToCamel(`${fileName}_column`)} = {
   fused: false,
   hidden: false,
-  key: "${snakeToCamel(userInput)}",
+  key: "${snakeToCamel(fileName)}",
   label: "${capitalizeFirstLetter(snakeToCamel(fileName))}",
   width: 200,
   enabled: true,
@@ -82,7 +82,7 @@ export function generate(fileName) {
     );
 
     // Open file in VS Code
-    // openFileInEditor(fileName);
+    openFileInEditor(fileName);
   } catch (err) {
     console.log(chalk.red("Please review your errors."));
     console.log(err);
